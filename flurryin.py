@@ -7,27 +7,35 @@ import os
 # import flurrynote
 
 F_PATH = 'log.tsv'
-F_ITEMS = ['created_on', 'body', 'tags', 'detail']
+F_ITEMS = ['created_on', 'type', 'body', 'tags', 'detail']
 
 
-def main():    
+def main():
+    # ファイルがなければ新規作成して1行目に項目行を書き込む。
+    if not os.path.isfile(F_PATH):
+       with open(F_PATH, 'w', encoding='utf-8', newline='') as f:
+            writer = csv.DictWriter(f, F_ITEMS, delimiter='\t')
+            writer.writeheader()
+
     while 1:
+        note = {}
+
         str_input = input("なんか気になった？: ")
         if str_input == 'q':
             break
 
-        note = {}
         note['created_on'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        note['body'] = str_input
+        if str_input.startswith('m '):
+            # 「m 」から始まってたらメインタスクとして記録
+            note['type'] = 'maintask'
+            note['body'] = str_input[2:]
+        else:
+            note['type'] = ''
+            note['body'] = str_input
 
-        is_file = os.path.isfile(F_PATH)  # ファイルの存在判定用
 
-        with open(F_PATH, 'w', encoding='utf-8', newline='') as f:
+        with open(F_PATH, 'a', encoding='utf-8', newline='') as f:
             writer = csv.DictWriter(f, F_ITEMS, delimiter='\t')
-            if not is_file:
-                # 新規ファイルなら、項目名を1行目に書き込む
-            	writer.writeheader()
-
             writer.writerow(note) # 今回のログを記録
 
 
