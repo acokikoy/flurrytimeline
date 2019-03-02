@@ -7,7 +7,7 @@ import os
 # import flurrynote
 
 F_PATH = 'log.tsv'
-F_ITEMS = ['created_on', 'type', 'body', 'tags', 'detail']
+F_ITEMS = ['created_on', 'body', 'tags', 'detail', 'main_task']
 
 
 def main():
@@ -17,26 +17,30 @@ def main():
             writer = csv.DictWriter(f, F_ITEMS, delimiter='\t')
             writer.writeheader()
 
-    while 1:
-        note = {}
+    """
+    note:
+        'created_on':   ログ時刻, 
+        'body':         ログ本文, 
+        'main_task':    ログ時点で行なっていたメインタスク
+    """    
+    note = {}
 
+    while 1:
         str_input = input("なんか気になった？: ")
         if str_input == 'q':
             break
 
         note['created_on'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
         if str_input.startswith('m '):
-            # 「m 」から始まってたらメインタスクとして記録
-            note['type'] = 'maintask'
-            note['body'] = str_input[2:]
+            # 「m 」から始まってたら現在のメインタスクを書き換える
+            note['main_task'] = str_input[2:]
         else:
-            note['type'] = ''
             note['body'] = str_input
 
-
-        with open(F_PATH, 'a', encoding='utf-8', newline='') as f:
-            writer = csv.DictWriter(f, F_ITEMS, delimiter='\t')
-            writer.writerow(note) # 今回のログを記録
+            with open(F_PATH, 'a', encoding='utf-8', newline='') as f:
+                writer = csv.DictWriter(f, F_ITEMS, delimiter='\t')
+                writer.writerow(note) # 今回のログを記録
 
 
     with open(F_PATH, 'r', encoding='utf-8') as f:
