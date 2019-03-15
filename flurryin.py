@@ -2,7 +2,9 @@
 from datetime import datetime
 
 
-import flurrynote
+from flurrynote import add_note
+from flurrynote import create_file
+from flurrynote import load_notes
 
 F_PATH = 'log.tsv'
 F_ITEMS = ['created_on', 'body', 'tags', 'detail', 'main_task']
@@ -10,7 +12,7 @@ F_ITEMS = ['created_on', 'body', 'tags', 'detail', 'main_task']
 
 def main():
     # ファイルがなければ新規作成して1行目に項目行を書き込む。
-    flurrynote.create_note()
+    create_file()
 
     note = {}
     while 1:
@@ -25,10 +27,10 @@ def main():
             note['main_task'] = str_input[2:]
         else:
             note['body'] = str_input
-            flurrynote.add_note(note) # 今回のログを記録
+            add_note(note) # 今回のログを記録
 
     print('お疲れ様でした。今日のふらり〜は次の通りです。\n','*'*20)
-    notes = flurrynote.load_notes()
+    notes = load_notes()
     main_task = ''
     for note in notes:
         if main_task != note['main_task']:

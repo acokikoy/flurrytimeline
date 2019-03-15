@@ -1,14 +1,13 @@
 """ Flurry Notes 
 notesはdict型（暫定）
 notes = {
-      'c_date': 2019-02-16 16:40:00,
+      'created_on': 2019-02-16 16:40:00,
       'body': '本文', 
       'tags': 'python, foo, bar', 
       'detail': '詳しい内容', 
       'main_task': '本来やってたメインタスク'
     }
 """
-import argparse
 import csv
 import os
 
@@ -17,7 +16,7 @@ import os
 CSV_PATH = 'log.tsv'
 CSV_ITEMS = ['created_on', 'body', 'tags', 'detail', 'main_task']
 
-def create_note():
+def create_file():
     """ ファイルがなければ新規作成して1行目に項目行を書き込む。"""
     if not os.path.isfile(CSV_PATH):
         with open(CSV_PATH, 'w', encoding='utf-8', newline='') as csv_file:
@@ -39,7 +38,6 @@ def load_notes():
         for row in reader:
             notes.append(dict(row))
         return notes
-
 
 
 def update_notes(path):
