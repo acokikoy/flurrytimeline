@@ -1,10 +1,10 @@
-""" Flurry Timeline - 1行ログ処理 """
+""" flurryin.py - 1行ログ入力 """
 from datetime import datetime
-
 
 from flurrynote import add_note
 from flurrynote import create_file
 from flurrynote import load_notes
+
 
 F_PATH = 'log.tsv'
 F_ITEMS = ['created_on', 'body', 'tags', 'detail', 'main_task']
@@ -15,6 +15,7 @@ def main():
     create_file()
 
     note = {}
+
     while 1:
         str_input = input("なんか気になった？: ")
         if str_input == 'q':
@@ -31,11 +32,13 @@ def main():
 
     print('お疲れ様でした。今日のふらり〜は次の通りです。\n','*'*20)
     notes = load_notes()
-    main_task = ''
+    prev_main_task = ''
     for note in notes:
-        if main_task != note['main_task']:
-            main_task = note['main_task']
-            print(main_task, '-------------------')
+        # メインタスクは切替わるタイミングで表示し、前回同様なら省略
+        if prev_main_task != note['main_task']:
+            print(note['main_task'], '-------------------')
+            prev_main_task = note['main_task']
+
         print(f"\ton {note['created_on']}: {note['body']}")
 
 if __name__ == '__main__':
