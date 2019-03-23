@@ -15,6 +15,7 @@ import os
 # CONSTANTS
 CSV_PATH = 'log.tsv'
 CSV_ITEMS = ['created_on', 'body', 'tags', 'detail', 'main_task']
+MAX_PER_PAGE = 5
 
 def create_file():
     """ ファイルがなければ新規作成して1行目に項目行を書き込む。"""
@@ -31,7 +32,7 @@ def add_note(note):
 
 
 def load_notes():
-    """ ファイルから読み出してdisc型のリストとして返す """
+    """ ファイルから全件読み出してdisc型のリストとして返す """
     with open(CSV_PATH, 'r', encoding='utf-8') as csv_file:
         reader = csv.DictReader(csv_file, delimiter='\t')
         notes = []
@@ -43,6 +44,46 @@ def load_notes():
 def update_notes(path):
     """ notesを指定パスのファイルに書き出し保存する """
     print("ファイルに保存しました")
+
+
+def search_by_page(notes, cur_idx, dir='prev'):
+    """ 指定範囲のログを取り出す """
+    cur_begin = cur_idx[0]
+    cur_end = cur_idx[-1] + 1
+
+    if dir == 'prev':
+        # prev 20
+        end = cur_begin
+        begin = end - MAX_PER_PAGE
+
+        if begin <  0:
+            begin = 0
+    else: # next 20
+        begin = cur_end
+        end = begin + MAX_PER_PAGE
+
+        if end > len(notes):
+            end = len(notes)
+
+    return [x for x in range(begin, end)]
+
+def search_by_tag(notes, tag):
+    """ 指定タグのログを取り出す """
+    idx = []
+    for i, note in enumerate(notes):
+        if tag in note['tags']:
+            idx.append(i)
+    return idx
+
+
+def search_by_date(notes, cur_idx, dir='prev'):
+# 直近1日分のログを取り出す
+    begin = 0
+    end = len(notes)
+    return [x for x in range(begin, end)]
+    # show_timeline(notes, begin, end)
+
+
 
 # class FlurryNote:
 #     """
