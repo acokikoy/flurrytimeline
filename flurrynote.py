@@ -1,12 +1,18 @@
 """ Flurry Notes 
-notesはdict型（暫定）
-notes = {
+notes: 1ログ分がdict型で、それのリスト（暫定）
+notes = [
+    {
       'created_on': 2019-02-16 16:40:00,
       'body': '本文', 
       'tags': 'python, foo, bar', 
       'detail': '詳しい内容', 
       'main_task': '本来やってたメインタスク'
+    }.
+    { ...
     }
+]
+idx: 表示対象noteのインデックスをリストで入れてる
+idx = [0, 1, 2, 3, 6]
 """
 import csv
 import os
@@ -46,24 +52,17 @@ def update_notes(path):
     print("ファイルに保存しました")
 
 
-def search_by_page(notes, cur_idx, dir='prev'):
+def search_by_page(notes, page):
     """ 指定範囲のログを取り出す """
-    cur_begin = cur_idx[0]
-    cur_end = cur_idx[-1] + 1
 
-    if dir == 'prev':
-        # prev 20
-        end = cur_begin
-        begin = end - MAX_PER_PAGE
+    begin = page * MAX_PER_PAGE
+    end = begin + MAX_PER_PAGE
 
-        if begin <  0:
-            begin = 0
-    else: # next 20
-        begin = cur_end
-        end = begin + MAX_PER_PAGE
-
-        if end > len(notes):
+    if end > len(notes):
             end = len(notes)
+
+    if begin > len(notes):
+            begin = len(notes) - MAX_PER_PAGE
 
     return [x for x in range(begin, end)]
 
