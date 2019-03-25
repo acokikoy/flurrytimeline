@@ -1,0 +1,24 @@
+<!-- templates/by_date.html -->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Show Timeline by Date</title>
+	<link rel="stylesheet" href="{{api.static_url('style.css')}}">
+</head>
+<body>
+<div id="content">
+  <h1>Show Timeline by Responder(date={{tmpl_date}})</h1>
+
+  <ul class="timeline">
+{% for i in tmpl_idx %}
+    <li class="event" data-date="{{tmpl_notes[i]['created_on']}}">
+      <h3>{{tmpl_notes[i]['body']}}</h3>
+      <p>[{{tmpl_notes[i]['tags']}}	], {{tmpl_notes[i]['main_task']}}</p>
+    </li>
+{% endfor %}
+  </ul>
+</div>
+</body>
+</html>
