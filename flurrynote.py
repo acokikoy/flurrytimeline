@@ -2,7 +2,7 @@
 notes: 1ログ分がdict型で、それのリスト（暫定）
 notes = [
     {
-      'created_on': 2019-02-16 16:40:00,
+      'created_on': '2019-02-16 16:40:00',
       'body': '本文', 
       'tags': 'python, foo, bar', 
       'detail': '詳しい内容', 
@@ -15,6 +15,7 @@ idx: 表示対象noteのインデックスをリストで入れてる
 idx = [0, 1, 2, 3, 6]
 """
 import csv
+from datetime import datetime, timedelta
 import os
 
 
@@ -52,6 +53,19 @@ def update_notes(path):
     print("ファイルに保存しました")
 
 
+
+def search_by_date(notes, str_date):
+# 指定日分のログを取り出す
+    idx = []
+    for i, note in enumerate(notes):
+        if str_date in note['created_on']:
+            idx.append(i)
+        elif idx:
+            return idx
+
+    return idx
+
+
 def search_by_page(notes, page):
     """ 指定範囲のログを取り出す """
 
@@ -73,15 +87,6 @@ def search_by_tag(notes, tag):
         if tag in note['tags']:
             idx.append(i)
     return idx
-
-
-def search_by_date(notes, cur_idx, dir='prev'):
-# 直近1日分のログを取り出す
-    begin = 0
-    end = len(notes)
-    return [x for x in range(begin, end)]
-    # show_timeline(notes, begin, end)
-
 
 
 # class FlurryNote:

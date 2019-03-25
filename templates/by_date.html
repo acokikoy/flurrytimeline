@@ -1,15 +1,15 @@
-<!-- templates/index.html -->
+<!-- templates/by_date.html -->
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Show Timeline by Responder</title>
+	<title>Show Timeline by Date</title>
 	<link rel="stylesheet" href="{{api.static_url('style.css')}}">
 </head>
 <body>
 <div id="content">
-  <h1>Show Timeline by Responder(page={{tmpl_page}})</h1>
+  <h1>Show Timeline by Responder(date={{tmpl_date}})</h1>
 
   <ul class="timeline">
 {% for i in tmpl_idx %}

@@ -14,7 +14,7 @@ api = responder.API()
 
 @api.route("/")
 @api.route("/page")
-def html_timeline(req, resp):
+def show_timeline(req, resp):
     # 一番最近のログ 20件を表示する
     idx_end = len(notes)
     idx_begin = idx_end - MAX_PER_PAGE
@@ -22,22 +22,32 @@ def html_timeline(req, resp):
         idx_begin = 0
     
     resp.html = api.template(
-                        'index.html', 
-                        tmpl_notes = notes, 
-                        tmpl_idx   = [x for x in range(idx_begin, idx_end)], 
-                        tmpl_page  = 0
-                        )
+                'index.html', 
+                tmpl_notes = notes, 
+                tmpl_idx   = [x for x in range(idx_begin, idx_end)], 
+                tmpl_page  = 0
+                )
 
 
-# http://127.0.0.1:5042/page/{str_page}
-@api.route("/page/{str_page}")
-def html_page(req, resp, *, str_page):
+# http://127.0.0.1:5042/p/2
+@api.route("/p/{str_page}")
+def show_by_page(req, resp, *, str_page):
     resp.html = api.template(
-                        'index.html', 
-                        tmpl_notes = notes, 
-                        tmpl_idx   = search_by_page(notes, int(str_page)), 
-                        tmpl_page  = str_page
-                        )
+                'index.html', 
+                tmpl_notes = notes, 
+                tmpl_idx   = search_by_page(notes, int(str_page)), 
+                tmpl_page  = str_page
+                )
+
+# http://127.0.0.1:5042/d/2019-03-19
+@api.route("/d/{str_date}")
+def show_by_date(req, resp, *, str_date):
+    resp.html = api.template(
+                'by_date.html', 
+                tmpl_notes = notes, 
+                tmpl_idx   = search_by_date(notes, str_date), 
+                tmpl_date  = str_date
+                )
 
 
 def main():
