@@ -47,9 +47,8 @@ def save_notes(notes, path=CSV_PATH):
     with open(path, 'w', encoding='utf-8', newline='') as csv_file:
         writer = csv.DictWriter(csv_file, CSV_ITEMS, delimiter='\t')
         writer.writeheader()
-        writer.writerow(notes)
-    # logging.info("notes: ", notes)
-    # logging.info("save_notes: ファイルに保存しました")
+        writer.writerows(notes)
+    logging.info("save_notes: ファイルに保存しました")
 
 
 def add_note(note, path=CSV_PATH):
@@ -63,7 +62,7 @@ def update_note(notes, id, note, path=CSV_PATH):
     """ 指定ファイルの指定レコードを上書き更新する
         ただし今は全件上書き更新している """
     notes[id] = note
-    save_notes(notes)
+    save_notes(notes, path='log2.tsv')
 
 
 def search_by_mode(notes, mode, mode_value):
