@@ -7,7 +7,7 @@ import urllib
 import responder
 
 from flurrynote import load_notes, update_note
-from flurrynote import search_by_page, search_by_date, search_by_tag
+from flurrynote import search_by_mode
 from flurrynote import MAX_PER_PAGE
 
 notes = load_notes()
@@ -35,7 +35,7 @@ def show_timeline(req, resp):
 def show_by_page(req, resp, *, str_page):
     resp.html = api.template('index.html', 
                 tmpl_notes = notes, 
-                tmpl_idx   = search_by_page(notes, int(str_page)), 
+                tmpl_idx   = search_by_mode(notes, mode='page', mode_value=str_page), 
                 tmpl_mode  = 'page',
                 tmpl_mode_value = str_page
                 )
@@ -45,10 +45,21 @@ def show_by_page(req, resp, *, str_page):
 def show_by_date(req, resp, *, str_date):
     resp.html = api.template('index.html', 
                 tmpl_notes = notes, 
-                tmpl_idx   = search_by_date(notes, str_date), 
+                tmpl_idx   = search_by_mode(notes, mode='date', mode_value=str_date), 
                 tmpl_mode  = 'date',
                 tmpl_mode_value  = str_date
                 )
+
+# http://127.0.0.1:5042/t/TAG
+@api.route("/t/{str_tag}") 
+def show_by_tag(req, resp, *, str_tag):
+    resp.html = api.template('index.html', 
+                tmpl_notes = notes, 
+                tmpl_idx   = search_by_mode(notes, mode='tag', mode_value=str_tag), 
+                tmpl_mode  = 'tag',
+                tmpl_mode_value  = str_tag
+                )
+
 
 # http://127.0.0.1:5042/update
 @api.route("/update")
@@ -65,17 +76,12 @@ async def update(req, resp):
 
     mode = qs_d['mode'][0]
     mode_value = qs_d['mode_value'][0]
-    if mode == 'page':
-        idx = search_by_page(notes, int(mode_value))
-    elif mode == 'date':
-        idx = search_by_date(notes, mode_value)
-
 
     resp.html = api.template(
                 'update.html', 
                 tmpl_notes = notes,
                 tmpl_updated_id = id,
-                tmpl_idx   = idx,
+                tmpl_idx   = search_by_mode(notes, mode, mode_value),
                 tmpl_mode  = mode,
                 tmpl_mode_value  = mode_value
                 )

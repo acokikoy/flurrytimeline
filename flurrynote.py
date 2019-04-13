@@ -48,7 +48,8 @@ def save_notes(notes, path=CSV_PATH):
         writer = csv.DictWriter(csv_file, CSV_ITEMS, delimiter='\t')
         writer.writeheader()
         writer.writerow(notes)
-    logging.info("save_notes: ファイルに保存しました")
+    # logging.info("notes: ", notes)
+    # logging.info("save_notes: ファイルに保存しました")
 
 
 def add_note(note, path=CSV_PATH):
@@ -65,39 +66,48 @@ def update_note(notes, id, note, path=CSV_PATH):
     save_notes(notes)
 
 
-def search_by_date(notes, str_date):
-# 指定日分のログを取り出す
-    idx = []
-    for i, note in enumerate(notes):
-        if str_date in note['created_on']:
-            idx.append(i)
-        elif idx:
-            return idx
+def search_by_mode(notes, mode, mode_value):
+    def _search_by_date(notes, str_date):
+    # 指定日分のログを取り出す
+        idx = []
+        for i, note in enumerate(notes):
+            if str_date in note['created_on']:
+                idx.append(i)
+            elif idx:
+                return idx
+        return idx
 
-    return idx
+
+    def _search_by_page(notes, str_page):
+        """ 指定範囲のログを取り出す """
+
+        begin = int(str_page) * MAX_PER_PAGE
+        end = begin + MAX_PER_PAGE
+
+        if end > len(notes):
+                end = len(notes)
+
+        if begin > len(notes):
+                begin = len(notes) - MAX_PER_PAGE
+
+        return [x for x in range(begin, end)]
 
 
-def search_by_page(notes, page):
-    """ 指定範囲のログを取り出す """
+    def _search_by_tag(notes, tag):
+        """ 指定タグのログを取り出す """
+        idx = []
+        for i, note in enumerate(notes):
+            if tag in note['tags']:
+                idx.append(i)
+        return idx
 
-    begin = page * MAX_PER_PAGE
-    end = begin + MAX_PER_PAGE
+    if mode == 'page':
+        return _search_by_page(notes, mode_value)
+    elif mode == 'date':
+        return _search_by_date(notes, mode_value)
+    elif mode == 'tag':
+        return _search_by_tag(notes, mode_value)
 
-    if end > len(notes):
-            end = len(notes)
-
-    if begin > len(notes):
-            begin = len(notes) - MAX_PER_PAGE
-
-    return [x for x in range(begin, end)]
-
-def search_by_tag(notes, tag):
-    """ 指定タグのログを取り出す """
-    idx = []
-    for i, note in enumerate(notes):
-        if tag in note['tags']:
-            idx.append(i)
-    return idx
 
 
 # class FlurryNote:
