@@ -62,7 +62,7 @@ def update_note(notes, id, note, path=CSV_PATH):
     """ 指定ファイルの指定レコードを上書き更新する
         ただし今は全件上書き更新している """
     notes[id] = note
-    save_notes(notes, path='log2.tsv')
+    save_notes(notes)
 
 
 def search_by_mode(notes, mode, mode_value):
