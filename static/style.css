@@ -52,6 +52,7 @@
 body {
   background: #252827;
   font-size: 16px;
+  color: white;
 }
 strong {
   font-weight: 600;
@@ -59,7 +60,6 @@ strong {
 h1 {
   font-family: 'Oswald', sans-serif;
   letter-spacing: 1.5px;
-  color: white;
   font-weight: 100;
   font-size: 2.4em;
 }

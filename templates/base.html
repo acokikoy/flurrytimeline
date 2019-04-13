@@ -1,0 +1,16 @@
+{# base.html #}
+<!-- templates/by_page.html -->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Show Timeline - {{ tmpl_mode }}</title>
+	<link rel="stylesheet" href="{{ api.static_url('style.css') }}">
+	<link rel="shortcut icon" href="{{ api.static_url('favicon.ico') }}">
+</head>
+<body>
+	{% block body %}
+	{% endblock %}
+</body>
+</html>

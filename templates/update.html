@@ -1,11 +1,12 @@
-<!-- templates/index.html -->
+<!-- templates/update.html -->
 {% extends 'base.html' %}
 
 {% block body %}
   {% include "form.tpl" %} 
 <div id="content">
-  <h1>Show Timeline - {{ tmpl_mode }}:{{ tmpl_mode_value }}</h1>
+  <h1>Updated the note - {{ tmpl_updated_id }}</h1>
 
+  <p>note {{ tmpl_updated_id }} を更新しました</p>
   <ul class="timeline">
   {% for id in tmpl_idx %}
     <li class="event" data-date="{{tmpl_notes[id]['created_on']}}">

@@ -16,6 +16,7 @@ idx = [0, 1, 2, 3, 6]
 """
 import csv
 from datetime import datetime, timedelta
+import logging
 import os
 
 
@@ -24,34 +25,44 @@ CSV_PATH = 'log.tsv'
 CSV_ITEMS = ['created_on', 'body', 'tags', 'detail', 'main_task']
 MAX_PER_PAGE = 5
 
-def create_file():
+def create_file(path=CSV_PATH):
     """ ファイルがなければ新規作成して1行目に項目行を書き込む。"""
-    if not os.path.isfile(CSV_PATH):
-        with open(CSV_PATH, 'w', encoding='utf-8', newline='') as csv_file:
+    if not os.path.isfile(path):
+        with open(path, 'w', encoding='utf-8', newline='') as csv_file:
             writer = csv.DictWriter(csv_file, CSV_ITEMS, delimiter='\t')
             writer.writeheader()
 
-def add_note(note):
-    """ 指定ファイルに、ログを一件追加する """
-    with open(CSV_PATH, 'a', encoding='utf-8', newline='') as csv_file:
-       writer = csv.DictWriter(csv_file, CSV_ITEMS, delimiter='\t')
-       writer.writerow(note) # 今回のログを書き込む
 
-
-def load_notes():
+def load_notes(path=CSV_PATH):
     """ ファイルから全件読み出してdisc型のリストとして返す """
-    with open(CSV_PATH, 'r', encoding='utf-8') as csv_file:
+    with open(path, 'r', encoding='utf-8') as csv_file:
         reader = csv.DictReader(csv_file, delimiter='\t')
         notes = []
         for row in reader:
             notes.append(dict(row))
         return notes
 
+def save_notes(notes, path=CSV_PATH):
+    """ ファイルをnotesで上書き更新 """
+    with open(path, 'w', encoding='utf-8', newline='') as csv_file:
+        writer = csv.DictWriter(csv_file, CSV_ITEMS, delimiter='\t')
+        writer.writeheader()
+        writer.writerow(notes)
+    logging.info("save_notes: ファイルに保存しました")
 
-def update_notes(path):
-    """ notesを指定パスのファイルに書き出し保存する """
-    print("ファイルに保存しました")
 
+def add_note(note, path=CSV_PATH):
+    """ 指定ファイルの末尾に、ログを1件追加する """
+    with open(path, 'a', encoding='utf-8', newline='') as csv_file:
+       writer = csv.DictWriter(csv_file, CSV_ITEMS, delimiter='\t')
+       writer.writerow(note) # 今回のログを書き込む
+
+
+def update_note(notes, id, note, path=CSV_PATH):
+    """ 指定ファイルの指定レコードを上書き更新する
+        ただし今は全件上書き更新している """
+    notes[id] = note
+    save_notes(notes)
 
 
 def search_by_date(notes, str_date):
